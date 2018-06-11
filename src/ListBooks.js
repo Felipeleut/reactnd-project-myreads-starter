@@ -53,7 +53,7 @@ class ListBooks extends Component {
                                                             <select
                                                                 defaultValue={'move'}
                                                                 onChange={(event) => {
-                                                                    if (event.target.value !== 'none')
+                                                                    //if (event.target.value !== 'none')
                                                                         onUpdateBook(book, event.target.value)
                                                                 }}
                                                             >
