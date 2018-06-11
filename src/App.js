@@ -3,6 +3,8 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import ListBooks from './ListBooks'
 
+
+
 class BooksApp extends React.Component {
   state = {
     books: [],
@@ -15,7 +17,18 @@ class BooksApp extends React.Component {
     showSearchPage: false
   }
 
+
   componentDidMount() {
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books })
+    })
+  }
+
+  updateBooks(book, shelf) {
+    BooksAPI.update(book, shelf)
+  }
+
+  componentDidUpdate(){
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
     })
@@ -46,7 +59,10 @@ class BooksApp extends React.Component {
             </div>
           </div>
         ) : (
-            <ListBooks books={this.state.books} />
+            <ListBooks
+              books={this.state.books}
+              onUpdateBook={this.updateBooks}
+            />
           )}
       </div>
     )
