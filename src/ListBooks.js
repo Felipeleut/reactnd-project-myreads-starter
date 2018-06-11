@@ -40,105 +40,41 @@ class ListBooks extends Component {
                 </div>
                 <div className="list-books-content">
                     <div>
-                        <div className="bookshelf">
-                            <h2 className="bookshelf-title">Currently Reading</h2>
-                            <div className="bookshelf-books">
-                                <ol className="books-grid">
-                                    {books.map((book) => book.shelf === 'currentlyReading' && (
-                                        <li key={book.id} >
-                                            <div className='book'>
-                                                <div className="book-top">
-                                                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                                                    <div className="book-shelf-changer">
-                                                        <select
-                                                            defaultValue={'move'}
-                                                            onChange={(event) => {
-                                                                if (event.target.value !== 'none')
-                                                                    onUpdateBook(book, event.target.value)
-                                                            }}
-                                                        >
-                                                            <option value="move" disabled>Move to...</option>
-                                                            {shelfs.map((shelf) => (shelf.value !== book.shelf) && (
-                                                                <option key={shelf.id} value={shelf.value}>{shelf.text}</option>
-                                                            ))}
-                                                            <option value="none">None</option>
-                                                        </select>
+                        {shelfs.map((shelf) => (
+                            <div key={shelf.id} className="bookshelf">
+                                <h2 className="bookshelf-title">{shelf.text}</h2>
+                                <div className="bookshelf-books">
+                                    <ol className="books-grid">
+                                        {books.map((book) => book.shelf === shelf.value && (
+                                            <li key={book.id} >
+                                                <div className='book'>
+                                                    <div className="book-top">
+                                                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                                                        <div className="book-shelf-changer">
+                                                            <select
+                                                                defaultValue={'move'}
+                                                                onChange={(event) => {
+                                                                    if (event.target.value !== 'none')
+                                                                        onUpdateBook(book, event.target.value)
+                                                                }}
+                                                            >
+                                                                <option value="move" disabled>Move to...</option>
+                                                                {shelfs.map((shelf) => (shelf.value !== book.shelf) && (
+                                                                    <option key={shelf.id} value={shelf.value}>{shelf.text}</option>
+                                                                ))}
+                                                                <option value="none">None</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
+                                                    <div className="book-title">{book.title}</div>
+                                                    <div className="book-authors">{book.authors}</div>
                                                 </div>
-                                                <div className="book-title">{book.title}</div>
-                                                <div className="book-authors">{book.authors}</div>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ol>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                </div>
                             </div>
-                        </div>
-                        <div className="bookshelf">
-                            <h2 className="bookshelf-title">Want to Read</h2>
-                            <div className="bookshelf-books">
-                                <ol className="books-grid">
-                                    {books.map((book) => book.shelf === 'wantToRead' && (
-                                        <li key={book.id} >
-                                            <div className='book'>
-                                                <div className="book-top">
-                                                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                                                    <div className="book-shelf-changer">
-                                                        <select
-                                                            defaultValue={'move'}
-                                                            onChange={(event) => {
-                                                                if (event.target.value !== 'none')
-                                                                    onUpdateBook(book, event.target.value)
-                                                            }}
-                                                        >
-                                                            <option value="move" disabled>Move to...</option>
-                                                            {shelfs.map((shelf) => (shelf.value !== book.shelf) && (
-                                                                <option key={shelf.id} value={shelf.value}>{shelf.text}</option>
-                                                            ))}
-                                                            <option value="none">None</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div className="book-title">{book.title}</div>
-                                                <div className="book-authors">{book.authors}</div>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ol>
-                            </div>
-                        </div>
-                        <div className="bookshelf">
-                            <h2 className="bookshelf-title">Read</h2>
-                            <div className="bookshelf-books">
-                                <ol className="books-grid">
-                                    {books.map((book) => book.shelf === 'read' && (
-                                        <li key={book.id} >
-                                            <div className='book'>
-                                                <div className="book-top">
-                                                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                                                    <div className="book-shelf-changer">
-                                                        <select
-                                                            defaultValue={'move'}
-                                                            onChange={(event) => {
-                                                                if (event.target.value !== 'none')
-                                                                    onUpdateBook(book, event.target.value)
-                                                            }}
-                                                        >
-                                                            <option value="move"  disabled>Move to...</option>
-                                                            {shelfs.map((shelf) => (shelf.value !== book.shelf) && (
-                                                                <option key={shelf.id} value={shelf.value}>{shelf.text}</option>
-                                                            ))}
-                                                            <option value="none">None</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div className="book-title">{book.title}</div>
-                                                <div className="book-authors">{book.authors}</div>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ol>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
                 <div className="open-search">
