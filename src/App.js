@@ -11,21 +11,42 @@ class BooksApp extends React.Component {
     books: []
   }
 
-
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
     })
   }
 
-  updateBooks(book, shelf) {
-    BooksAPI.update(book, shelf)
-  }
-
-  componentDidUpdate() {
+  getBooks() {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
     })
+  }
+
+  updateBooks(book, shelf) {
+    BooksAPI.update(book, shelf).then().then(() => {
+      this.getBooks()
+    })
+  }
+
+  searchBooks(query) {
+    if (query == '') {
+      var state = {
+        books: []
+      }
+      this.setState(state)
+    } else {
+      BooksAPI.search(query).then((books) => {
+        if (books.error) {
+          var state = {
+            books: []
+          }
+          this.setState(state)
+        } else {
+          this.setState({ books })
+        }
+      })
+    }
   }
 
   render() {
@@ -34,11 +55,24 @@ class BooksApp extends React.Component {
         <Route exact path="/" render={() => (
           <ListBooks
             books={this.state.books}
-            onUpdateBook={this.updateBooks}
+            onUpdateBook={(book, shelf) => {
+              this.updateBooks(book, shelf)
+            }}
           />
         )} />
         <Route path="/search" render={({ history }) => (
-          <SearchBooks /> 
+          <SearchBooks
+            books={this.state.books}
+            onSearchBooks={(query) => {
+              this.searchBooks(query)
+            }}
+            onUpdateBook={(book, shelf) => {
+              this.updateBooks(book, shelf)
+            }}
+            getBooks={() => {
+              this.getBooks()
+            }}
+          />
         )} />
       </div>
     )
