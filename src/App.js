@@ -43,6 +43,7 @@ class BooksApp extends React.Component {
           }
           this.setState(state)
         } else {
+          console.log(books)
           this.setState({ books })
         }
       })

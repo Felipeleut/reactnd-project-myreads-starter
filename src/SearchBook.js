@@ -20,6 +20,13 @@ const shelfs = [
     }
 ]
 
+function defineImage(imageLinks) {
+    if(imageLinks)
+        return imageLinks.thumbnail
+    else
+        return '#'
+}
+
 class SearchBooks extends Component {
 
     static propTypes = {
@@ -43,17 +50,7 @@ class SearchBooks extends Component {
 
         const { query } = this.state
         const { books, onUpdateBook, getBooks} = this.props
-
-        // let showingBooks
-        // if (query) {
-        //     // const match = new RegExp(escapeRegExp(query), 'i')
-        //     // showingBooks = searchBooks(query)
-        // } else {
-        //      showingBooks = books
-        // }
-
-
-
+        
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -75,7 +72,7 @@ class SearchBooks extends Component {
                             <li key={book.id}>
                                 <div className='book'>
                                     <div className="book-top">                                        
-                                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url()` }}></div>
+                                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${defineImage(book.imageLinks)})` }}></div>
                                         <div className="book-shelf-changer">
                                             <select
                                                 defaultValue={'move'}
@@ -84,11 +81,16 @@ class SearchBooks extends Component {
                                                     onUpdateBook(book, event.target.value)
                                                 }}
                                             >
-                                                <option value="move" disabled>Move to...</option>
-                                                {shelfs.map((shelf) => (shelf.value !== book.shelf) && (
+                                                {/* <option value="move" disabled>Move to...</option> */}
+
+                                                {shelfs.map((shelf) => (shelf.value === book.shelf) && (
                                                     <option key={shelf.id} value={shelf.value}>{shelf.text}</option>
                                                 ))}
                                                 <option value="none">None</option>
+                                                {shelfs.map((shelf) => (shelf.value !== book.shelf) && (
+                                                    <option key={shelf.id} value={shelf.value}>{shelf.text}</option>
+                                                ))}
+
                                             </select>
                                         </div>
                                     </div>
