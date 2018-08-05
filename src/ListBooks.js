@@ -20,9 +20,15 @@ const shelfs = [
     }
 ]
 
+function defineImage(imageLinks) {
+    if(imageLinks)
+        return imageLinks.thumbnail
+    else
+        return '#'
+}
 
 class ListBooks extends Component {
-
+    
     static propTypes = {
         books: PropTypes.array.isRequired,
         onUpdateBook: PropTypes.func.isRequired
@@ -48,7 +54,7 @@ class ListBooks extends Component {
                                             <li key={book.id} >
                                                 <div className='book'>
                                                     <div className="book-top">
-                                                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                                                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${defineImage(book.imageLinks)})` }}></div>
                                                         <div className="book-shelf-changer">
                                                             <select
                                                                 defaultValue={'move'}

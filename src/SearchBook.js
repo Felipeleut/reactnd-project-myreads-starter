@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import * as BooksAPI from './BooksAPI'
 
 const shelfs = [
     {
@@ -21,7 +22,7 @@ const shelfs = [
 ]
 
 function defineImage(imageLinks) {
-    if(imageLinks)
+    if (imageLinks)
         return imageLinks.thumbnail
     else
         return '#'
@@ -30,31 +31,52 @@ function defineImage(imageLinks) {
 class SearchBooks extends Component {
 
     static propTypes = {
-        books: PropTypes.array.isRequired,
+        shelfsBooks: PropTypes.array.isRequired,
         onUpdateBook: PropTypes.func.isRequired,
-        onSearchBooks: PropTypes.func.isRequired,
         getBooks: PropTypes.func.isRequired
     }
 
     state = {
-        query: ''
+        query: '',
+        books: []
     }
 
+    searchBooks(query) {
+        if (query === '') {
+            var searchState = {
+                books: []
+            }
+            this.setState(searchState)
+        } else {
+            BooksAPI.search(query).then((books) => {
+                if (books.error) {
+                    var searchState = {
+                        books: []
+                    }
+                    this.setState(searchState)
+                } else {
+                    this.setState({ books })
+                }
+            })
+                .catch(function (error) {
+                    console.log(error)
+                })
+        }
+    }
     updateQuery = (query) => {
         this.setState({ query: query })
-        this.props.onSearchBooks(query)
-            
+        this.searchBooks(query)
     }
 
     render() {
 
-        const { query } = this.state
-        const { books, onUpdateBook, getBooks} = this.props
-        
+        const { books, query } = this.state
+        const { shelfsBooks, onUpdateBook, getBooks } = this.props
+
         return (
             <div className="search-books">
                 <div className="search-books-bar">
-                    <Link className='close-search' to='/' onClick={(event)=>{
+                    <Link className='close-search' to='/' onClick={(event) => {
                         getBooks()
                     }}>Close</Link>
                     <div className="search-books-input-wrapper">
@@ -71,26 +93,28 @@ class SearchBooks extends Component {
                         {books.map((book) => (
                             <li key={book.id}>
                                 <div className='book'>
-                                    <div className="book-top">                                        
-                                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${defineImage(book.imageLinks)})` }}></div>
+                                    <div className="book-top">
+                                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${defineImage(book.imageLinks)})` }}></div>
                                         <div className="book-shelf-changer">
                                             <select
                                                 defaultValue={'move'}
                                                 onChange={(event) => {
-                                                    //if (event.target.value !== 'none')
                                                     onUpdateBook(book, event.target.value)
+                                                    this.updateQuery('')
                                                 }}
                                             >
-                                                {/* <option value="move" disabled>Move to...</option> */}
+                                                <option disabled>Move to...</option>
 
-                                                {shelfs.map((shelf) => (shelf.value === book.shelf) && (
-                                                    <option key={shelf.id} value={shelf.value}>{shelf.text}</option>
+                                                {shelfsBooks.map((shelfbook) => (shelfbook.id === book.id) && (
+                                                    shelfs.map((shelf) => (shelf.value === shelfbook.shelf) && (
+                                                        book.shelf = shelf.value,
+                                                        <option key={shelf.id} defaultValue={shelf.value} >{'->'+shelf.text}</option>                             
+                                                    ))
                                                 ))}
-                                                <option value="none">None</option>
                                                 {shelfs.map((shelf) => (shelf.value !== book.shelf) && (
                                                     <option key={shelf.id} value={shelf.value}>{shelf.text}</option>
                                                 ))}
-
+                                                <option value="none">None</option>
                                             </select>
                                         </div>
                                     </div>
